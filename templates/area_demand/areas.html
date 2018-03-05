@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% load static from staticfiles %}
+    {% load filters %}
+    <title>省市县查询</title>
+    <script src="{% static 'js/jquery-1.12.4.min.js' %}"></script>
+    <script>
+        $(function () {
+            $.get('/prov', function (data) {
+                console.log(data.data)
+                var prov_data = data.data;
+                var prov = $('#prov');
+                for(var i=0; i<prov_data.length; i++) {
+                    prov.append('<option value="'+ prov_data[i][0] +'">' + prov_data[i][1] + '</option>')
+                }
+            })
+
+            $('#prov').change(function () {
+                var id = $(this).val()
+                $.get('/city/'+id, function (data) {
+                    var city_data = data.data;
+                    var city = $('#city');
+                    city.empty().append('<option value="">---请选择市---</option>')
+                    $("#dis").empty().append('<option value="">---请选择县---</option>')
+                    $.each(city_data, function (index, item) {
+                        city.append('<option value="'+ item[0] +'">' + item[1] + '</option>')
+                    })
+                })
+            })
+
+            $("#city").change(function () {
+                var id = $(this).val()
+
+                $.get('/dis/'+id, function (data) {
+                    console.log(data.data)
+                    var dis_data = data.data
+                    var dis = $('#dis')
+                    dis.empty().append('<option value="">---请选择县---</option>')
+                    $.each(dis_data, function (index, element) {
+                        dis.append('<option value=">' + element[0] + '">' + element[1] + '</option>')
+                    })
+                })
+            })
+        })
+    </script>
+
+</head>
+<body>
+<select name="" id="prov">
+    <option value="">---请选择省---</option>
+</select>
+<select name="" id="city">
+    <option value="">---请选择市---</option>
+</select>
+<select name="" id="dis">
+    <option value="">---请选择县---</option>
+</select>
+
+
+{# 自定义过滤器 #}
+<ul>
+    {% for area in areas_addr %}
+        {% if area.id|mod %}
+            <li>{{ area }}</li>
+        {% endif %}
+    {% endfor %}
+</ul>
+</body>
+</html>

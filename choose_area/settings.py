@@ -49,6 +49,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'area_demand.middleware.MyMidelleware',
 )
 
 ROOT_URLCONF = 'choose_area.urls'
